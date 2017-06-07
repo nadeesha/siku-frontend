@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "test": "yarn run flow",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "postinstall": "flow-typed install"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

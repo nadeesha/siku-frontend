@@ -23,7 +23,7 @@ declare module 'history' {
  * needed.
  */
 declare module 'history/createBrowserHistory' {
-  declare module.exports: () => void;
+  declare module.exports: any;
 }
 
 declare module 'history/createHashHistory' {

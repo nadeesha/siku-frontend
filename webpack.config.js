@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 
+require('dotenv').config();
+
 module.exports = {
   entry: [
     'react-hot-loader/patch',
@@ -14,7 +16,7 @@ module.exports = {
     // // bundle the client for hot reloading
     // // only- means to only hot reload for successful updates
 
-    './src/index.js',
+    './src/index.tsx',
     // the entry point of our app
   ],
 
@@ -27,10 +29,7 @@ module.exports = {
   devtool: 'inline-source-map',
 
   resolve: {
-    extensions: ['.webpack.js', '.web.js', '.js'],
-    alias: {
-      config: path.join(__dirname, 'config', `${process.env.NODE_ENV}.js`),
-    },
+    extensions: ['.webpack.js', '.web.js', '.js', '.ts', '.tsx'],
   },
 
   plugins: [
@@ -42,6 +41,17 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
+
+    new webpack.DefinePlugin({
+      'process.env': {
+        GRAPHQL_ENDPOINT: JSON.stringify(process.env.GRAPHQL_ENDPOINT),
+        AUTH0_CLIENT_ID: JSON.stringify(process.env.AUTH0_CLIENT_ID),
+        AUTH0_DOMAIN: JSON.stringify(process.env.AUTH0_DOMAIN),
+        AUTH0_AUDIENCE: JSON.stringify(process.env.AUTH0_AUDIENCE),
+        WEB_ROOT: JSON.stringify(process.env.WEB_ROOT),
+        ENV: JSON.stringify(process.env.ENV),
+      },
+    }),
   ],
 
   devServer: {
@@ -55,10 +65,15 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.tsx?$/,
+        loader: ['awesome-typescript-loader'],
+      },
+      {
+        test: /\.js?$/,
         loader: ['babel-loader'],
         exclude: /node_modules/,
       },
+      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
       // https://github.com/gajus/react-css-modules#css-modules
       {
         test: /\.css$/,

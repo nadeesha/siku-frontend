@@ -9,7 +9,8 @@
     "test": "yarn lint && yarn unit-tests",
     "unit-tests": "NODE_ENV=test nyc mocha ./src/**/*.test.js node_modules/.bin/saul",
     "start": "webpack-dev-server",
-    "relay": "relay-compiler --src ./src --schema src/services/graphql/schema.graphql $args"
+    "relay": "relay-compiler --src ./src --schema src/services/graphql/schema.graphql $args",
+    "update-schema": "get-graphql-schema http://localhost:6661/graphql > src/services/graphql/schema.graphql"
   },
   "devDependencies": {
     "@types/auth0-lock": "^10.16.0",

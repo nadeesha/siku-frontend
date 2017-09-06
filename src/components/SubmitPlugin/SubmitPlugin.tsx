@@ -1,31 +1,32 @@
+import Logger from '../../services/logging/Logger';
 import withAuthentication from '../../services/auth/withAuthentication';
 import * as React from 'react';
-import { Button, Checkbox, Form } from 'semantic-ui-react';
+import { Button, Checkbox, Form, Header } from 'semantic-ui-react';
 import Page from '../Page';
 import createPluginMutation from './createPluginMutation';
 import mutate from '../../services/graphql/mutate';
 import { withState, compose, withProps } from 'recompose';
 import * as _ from 'lodash';
 import { RouteComponentProps } from 'react-router';
-import { IAuthenticatedProps } from '../../services/auth/withAuthentication';
 
 interface ISubmitPluginVariables {
-  npmModuleName: string;
-  description: string;
   name: string;
-  authorId: string;
+  description: string;
+  npmModuleName: string;
 }
+
+const logger = new Logger('SubmitPlugin');
 
 const submitPlugin = async (variables: ISubmitPluginVariables) => {
   let result;
 
   try {
     result = await mutate(createPluginMutation, { input: variables });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    logger.info('Error creating plugin', { error });
   }
 
-  console.log({ result });
+  logger.info('Plugin created', { result });
 };
 
 interface INpmModuleUpdater {
@@ -52,14 +53,13 @@ interface ICanSubmitEvaluation {
   canSubmit: boolean;
 }
 
-interface IFormProps extends INpmModuleUpdater, IDescriptionUpdater, IPluginNameUpdater, IAcceptTermsUpdater {
+interface IFormProps extends INpmModuleUpdater, IDescriptionUpdater, IPluginNameUpdater, IAcceptTermsUpdater {}
 
-}
-
-interface ISubmitPluginProps extends RouteComponentProps<{}>, IAuthenticatedProps, IFormProps, ICanSubmitEvaluation {}
+interface ISubmitPluginProps extends RouteComponentProps<{}>, IFormProps, ICanSubmitEvaluation {}
 
 const SubmitPlugin: React.StatelessComponent<ISubmitPluginProps> = props =>
   <Page>
+    <Header>{'Submit Plugin'}</Header>
     <Form>
       <Form.Field>
         <label>Plugin name:</label>
@@ -100,7 +100,6 @@ const SubmitPlugin: React.StatelessComponent<ISubmitPluginProps> = props =>
             npmModuleName: props.npmModuleName,
             name: props.pluginName,
             description: props.description,
-            authorId: props.user.id,
           })}
       >
         Submit
@@ -119,7 +118,11 @@ const enhance = compose<RouteComponentProps<{}>, RouteComponentProps<any>>(
     false,
   ),
   withProps<ICanSubmitEvaluation, IFormProps>(props => ({
-    canSubmit: props.description && props.npmModuleName && props.pluginName && props.termsAccepted,
+    canSubmit:
+      props.description &&
+        props.npmModuleName &&
+        props.pluginName &&
+        props.termsAccepted,
   })),
 );
 

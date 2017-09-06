@@ -2,22 +2,19 @@ import Auth0Lock from 'auth0-lock';
 import * as _ from 'lodash';
 import history from '../routing/history';
 import Logger from './../logging/Logger';
-import loginMutation from './loginMutation';
 import mutate from './../graphql/mutate';
 import ServiceExchange from './../ServiceExchange';
 import ServiceManager from './../ServiceManager';
 import config from '../../config';
 
-export interface ILoginUserWithAuth0LockInput_identity {
-  userId: string;
-  provider: string;
-  connection: string;
-  isSocial: boolean;
-  expiresIn: number;
-}
-
 export interface ILoginUserWithAuth0LockInput {
-  identity: ILoginUserWithAuth0LockInput_identity;
+  identity: {
+    userId: string;
+    provider: string;
+    connection: string;
+    isSocial: boolean;
+    expiresIn: number;
+  };
   access_token: string;
 }
 
@@ -66,11 +63,13 @@ class Auth {
           idTokenPayload: { exp: number };
         }) => {
           logger.info('Authenticated', { accessToken });
+
           Auth.onAuthenticated({
             accessToken,
             idToken,
             expiresAt: idTokenPayload.exp,
           });
+
           Auth.toStorage(idToken, accessToken, idTokenPayload.exp);
           history.push(state);
         },
@@ -78,14 +77,10 @@ class Auth {
     }
   }
 
-  public static onAuthenticated = (
-    auth: IStoredAuthType,
-    _ServiceExchange = ServiceExchange,
-    _Auth = Auth,
-  ): void => {
-    _ServiceExchange.emit('authenticated', { idToken: auth.idToken });
+  public static onAuthenticated = (auth: IStoredAuthType): void => {
+    ServiceExchange.emit('authenticated', { idToken: auth.idToken });
 
-    _Auth.lock.getUserInfo(auth.accessToken, (error: Error, profile) => {
+    Auth.lock.getUserInfo(auth.accessToken, (error: Error, profile) => {
       if (error) {
         logger.error(error);
       }
@@ -102,36 +97,24 @@ class Auth {
           'user_id',
         ),
       };
-
-      _Auth.loginToGraphql(input);
     });
-  }
-
-  public static loginToGraphql: (
-    input: ILoginUserWithAuth0LockInput,
-  ) => Promise<any> = (input: ILoginUserWithAuth0LockInput) =>
-    mutate(loginMutation, { input }).then(logger.info).catch(logger.error)
+  };
 
   public static toStorage = (
     idToken: string,
     accessToken: string,
     expiresAt: number,
-    _JSON: typeof JSON = JSON,
-    _localStorage: typeof localStorage = localStorage,
   ) =>
-    _localStorage.setItem(
+    localStorage.setItem(
       'siku-auth',
-      _JSON.stringify({ idToken, expiresAt, accessToken }),
-    )
+      JSON.stringify({ idToken, expiresAt, accessToken }),
+    );
 
-  public static fromStorage(
-    _JSON: typeof JSON = JSON,
-    _localStorage = localStorage,
-  ): IStoredAuthType {
+  public static fromStorage(): IStoredAuthType {
     try {
-      return _JSON.parse(_localStorage.getItem('siku-auth') || '{}');
+      return JSON.parse(localStorage.getItem('siku-auth') || '{}');
     } catch (e) {
-      _localStorage.removeItem('siku-auth');
+      localStorage.removeItem('siku-auth');
       return {};
     }
   }

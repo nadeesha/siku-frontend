@@ -3,8 +3,8 @@
  *   relay-compiler
  *
  * @providesModule createPluginMutation.graphql
- * @generated SignedSource<<94a9be930f3d64c58d58ae47cd143d67>>
- * @relayHash de50a16266710b512b956d02e59e8b87
+ * @generated SignedSource<<2b3a51793b51b3d31287ba27c42699bf>>
+ * @relayHash 24f1a1e504585685bab932b84dbc4556
  * @flow
  * @nogrep
  */
@@ -15,38 +15,15 @@
 
 /*::
 import type {ConcreteBatch} from 'relay-runtime';
-export type CreatePluginInput = {
-  publicRepoUrl?: ?string;
-  author?: ?CreatePluginInput_author;
-  authorId?: ?string;
-  name?: ?string;
-  description?: ?string;
-};
 
-export type CreatePluginInput_author = {
-  username?: ?string;
-  password?: ?any;
-};
-
-export type createPluginMutationResponse = {
-  changedPlugin?: ?createPluginMutationResponse_changedPlugin;
-};
-
-export type createPluginMutationResponse_changedPlugin = {
-  id: string;
-};
 */
 
 
 /*
 mutation createPluginMutation(
-  $input: CreatePluginInput!
+  $plugin: CreatePluginInput!
 ) {
-  createPlugin(input: $input) {
-    changedPlugin {
-      id
-    }
-  }
+  createPlugin(plugin: $plugin)
 }
 */
 
@@ -55,7 +32,7 @@ const batch /*: ConcreteBatch*/ = {
     "argumentDefinitions": [
       {
         "kind": "LocalArgument",
-        "name": "input",
+        "name": "plugin",
         "type": "CreatePluginInput!",
         "defaultValue": null
       }
@@ -65,39 +42,17 @@ const batch /*: ConcreteBatch*/ = {
     "name": "createPluginMutation",
     "selections": [
       {
-        "kind": "LinkedField",
+        "kind": "ScalarField",
         "alias": null,
         "args": [
           {
             "kind": "Variable",
-            "name": "input",
-            "variableName": "input",
+            "name": "plugin",
+            "variableName": "plugin",
             "type": "CreatePluginInput!"
           }
         ],
-        "concreteType": "CreatePluginPayload",
         "name": "createPlugin",
-        "plural": false,
-        "selections": [
-          {
-            "kind": "LinkedField",
-            "alias": null,
-            "args": null,
-            "concreteType": "Plugin",
-            "name": "changedPlugin",
-            "plural": false,
-            "selections": [
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "args": null,
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
         "storageKey": null
       }
     ],
@@ -111,7 +66,7 @@ const batch /*: ConcreteBatch*/ = {
     "argumentDefinitions": [
       {
         "kind": "LocalArgument",
-        "name": "input",
+        "name": "plugin",
         "type": "CreatePluginInput!",
         "defaultValue": null
       }
@@ -121,44 +76,22 @@ const batch /*: ConcreteBatch*/ = {
     "operation": "mutation",
     "selections": [
       {
-        "kind": "LinkedField",
+        "kind": "ScalarField",
         "alias": null,
         "args": [
           {
             "kind": "Variable",
-            "name": "input",
-            "variableName": "input",
+            "name": "plugin",
+            "variableName": "plugin",
             "type": "CreatePluginInput!"
           }
         ],
-        "concreteType": "CreatePluginPayload",
         "name": "createPlugin",
-        "plural": false,
-        "selections": [
-          {
-            "kind": "LinkedField",
-            "alias": null,
-            "args": null,
-            "concreteType": "Plugin",
-            "name": "changedPlugin",
-            "plural": false,
-            "selections": [
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "args": null,
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
         "storageKey": null
       }
     ]
   },
-  "text": "mutation createPluginMutation(\n  $input: CreatePluginInput!\n) {\n  createPlugin(input: $input) {\n    changedPlugin {\n      id\n    }\n  }\n}\n"
+  "text": "mutation createPluginMutation(\n  $plugin: CreatePluginInput!\n) {\n  createPlugin(plugin: $plugin)\n}\n"
 };
 
 module.exports = batch;

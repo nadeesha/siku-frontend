@@ -57,7 +57,7 @@ interface IFormProps extends INpmModuleUpdater, IDescriptionUpdater, IPluginName
 
 interface ISubmitPluginProps extends RouteComponentProps<{}>, IFormProps, ICanSubmitEvaluation {}
 
-const SubmitPlugin: React.StatelessComponent<ISubmitPluginProps> = props =>
+const SubmitPluginComponent: React.StatelessComponent<ISubmitPluginProps> = props =>
   <Page>
     <Header>{'Submit Plugin'}</Header>
     <Form>
@@ -126,4 +126,6 @@ const enhance = compose<RouteComponentProps<{}>, RouteComponentProps<any>>(
   })),
 );
 
-export default enhance(SubmitPlugin);
+const SubmitPlugin = enhance(SubmitPluginComponent);
+
+export default SubmitPlugin;

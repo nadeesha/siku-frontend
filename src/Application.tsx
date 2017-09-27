@@ -8,21 +8,16 @@ import Plugins from './components/Plugins/Plugins';
 import ServiceManager from './services/ServiceManager';
 import SubmitPlugin from './components/SubmitPlugin/SubmitPlugin';
 
-const Application = (): JSX.Element => (
+const Application = (): JSX.Element =>
   <Router>
     <div>
-      <div>
-        <Header />
-      </div>
-      <div className="ui container">
-        <Route exact path="/" component={Home} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/plugins" component={Plugins} />
-        <Route path="/submit-plugin" component={SubmitPlugin} />
-      </div>
+      <Header />
+      <Route exact path="/" component={Home} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/plugins" component={Plugins} />
+      <Route path="/submit-plugin" component={SubmitPlugin} />
     </div>
-  </Router>
-);
+  </Router>;
 
 ServiceManager.init();
 

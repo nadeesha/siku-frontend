@@ -12,7 +12,6 @@ interface IPluginsProps extends IResultPropsType<IPluginsQueryResult, {}>, Route
 
 const PluginAction: React.StatelessComponent<{
   installed: boolean;
-  id: string;
   onClick: () => void;
 }> = props =>
   <Button
@@ -31,13 +30,7 @@ const Plugins: React.StatelessComponent<IPluginsProps> = (props): JSX.Element =>
         <Card
           header={plugin.name}
           description={plugin.description}
-          extra={
-            <PluginAction
-              installed
-              id={plugin.id}
-              onClick={() => props.history.push(`/view-plugin?id=${plugin.id}`)}
-            />
-          }
+          extra={<PluginAction installed onClick={() => props.history.push(`/view-plugin?id=${plugin.id}`)} />}
         />,
       )}
     </Card.Group>
